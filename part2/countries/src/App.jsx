@@ -106,8 +106,36 @@ function CountryWrapper({ filter }) {
             </ul>
           </div>
           <img src={x.flags.png} />
+          <Weather city={x.capital} />
         </div>
       ))}
+    </div>
+  );
+}
+
+function Weather({ city }) {
+  const [weather, setWeather] = useState(null);
+  const url =
+    "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=";
+  const key = import.meta.env.VITE_KEY;
+  useEffect(() => {
+    axios.get(`${url}${city}&appid=${key}`).then((response) => {
+      setWeather(response.data);
+    });
+  }, [city, key]);
+
+  if (!weather) return null;
+  return (
+    <div>
+      <h2>Weather in {city}</h2>
+      <div>temperature: {weather.main.temp} Fahrenheit</div>
+      <div>wind: {weather.wind.speed} mph</div>
+      <img
+        src={`https://openweathermap.org/img/wn/${weather.weather.map(
+          (x) => x.icon
+        )}@2x.png`}
+      />
+      <div>{weather.weather.map((x) => x.description)}</div>
     </div>
   );
 }
