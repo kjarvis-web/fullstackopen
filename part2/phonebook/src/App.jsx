@@ -15,6 +15,7 @@ const App = () => {
   const [search, setSearch] = useState("");
   const [notification, setNotification] = useState("");
   const [added, setAdded] = useState(false);
+  const [error, setError] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -37,6 +38,11 @@ const App = () => {
           })
           .catch((error) => {
             alert(error, `something`);
+            setError(true);
+            setNotification(error.message);
+            setTimeout(() => {
+              setError(false);
+            }, 5000);
           });
       }
     } else {
@@ -74,7 +80,7 @@ const App = () => {
       .then((initialPersons) => {
         setPersons(initialPersons);
       })
-      .catch((error) => console.log("fail"));
+      .catch((error) => console.log(error, "fail"));
   }, []);
 
   console.log("render", persons.length, "persons");
@@ -83,7 +89,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {added && <Notification message={notification} />}
+      {added && <Notification added={added} message={notification} />}
+      {error && <Notification added={added} message={notification} />}
       <Filter search={search} setSearch={setSearch} />
       <h2>add a new</h2>
       <Form
@@ -163,16 +170,31 @@ function Filter({ search, setSearch }) {
   );
 }
 
-function Notification({ message }) {
-  const styles = {
+function Notification({ added, message }) {
+  const stylesAdded = {
     color: "green",
-    fontSize: 55,
+    fontSize: 32,
+    border: "green solid 4px",
+    marginBottom: 16,
+    borderRadius: "5px",
+    background: "silver",
+    padding: 4,
+  };
+
+  const stylesError = {
+    color: "red",
+    fontSize: 32,
+    border: "red solid 4px",
+    marginBottom: 16,
+    borderRadius: "5px",
+    background: "silver",
+    padding: 4,
   };
 
   if (message === null) return null;
 
   return (
-    <div style={styles} className="notification">
+    <div style={added ? stylesAdded : stylesError} className="notification">
       {message}
     </div>
   );
