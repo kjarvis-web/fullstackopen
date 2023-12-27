@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import personService from "./services/persons";
 
 // const promise = axios.get("http://localhost:3001/persons");
@@ -54,14 +53,25 @@ const App = () => {
       //   });
       // setPersons((prev) => [...prev, { name: newName, number: newNumber }]);
 
-      personService.create(personObj).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setAdded(true);
-        setNotification(`${returnedPerson.name} has been added`);
-        setTimeout(() => {
-          setAdded(false);
-        }, 5000);
-      });
+      personService
+        .create(personObj)
+        .then((returnedPerson) => {
+          console.log(returnedPerson);
+          setPersons(persons.concat(personObj));
+          setAdded(true);
+          setNotification(`${personObj.name} has been added`);
+          setTimeout(() => {
+            setAdded(false);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+          setError(true);
+          setNotification(`${error.response.data.error}`);
+          setTimeout(() => {
+            setError(false);
+          }, 5000);
+        });
 
       setNewName("");
       setNewNumber("");
@@ -82,8 +92,6 @@ const App = () => {
       })
       .catch((error) => console.log(error, "fail"));
   }, []);
-
-  console.log("render", persons.length, "persons");
 
   //exercises 2.6-2.10
   return (
@@ -139,27 +147,25 @@ function Persons({ search, persons, setPersons }) {
       personService.remove(id);
     } else null;
   }
-  return (
-    <div>
-      {search === ""
-        ? persons.map((x, i) => (
-            <div key={i}>
-              {i + 1}. {x.name} {x.number}{" "}
-              <button onClick={() => handleDelete(x.id)}>delete</button>
-            </div>
-          ))
-        : persons
-            .filter((item) =>
-              item.name.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((x, i) => (
-              <div key={i}>
-                {i + 1}. {x.name} {x.number} <button>delete</button>
-              </div>
-            ))}
-    </div>
-  );
+  return search.length < 1
+    ? persons.map((x, i) => (
+        <div key={i}>
+          {i + 1}. {x.name} {x.number}{" "}
+          <button onClick={() => handleDelete(x.id)}>delete</button>
+        </div>
+      ))
+    : persons
+        .filter((x) => x.name.toLowerCase().includes(search.toLowerCase()))
+        .map((x, i) => (
+          <div key={i}>
+            {i + 1}. {x.name} {x.number} <button>delete</button>
+          </div>
+        ));
 }
+
+// countries.filter((x) =>
+// x.name.common.toLowerCase().includes(search.toLowerCase())
+// );
 
 function Filter({ search, setSearch }) {
   return (
