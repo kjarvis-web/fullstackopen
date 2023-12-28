@@ -8,4 +8,25 @@ const favoriteBlog = (blogs) => {
   return mostLikes;
 };
 
-module.exports = { dummy, favoriteBlog };
+const mostBlogs = (blogs) => {
+  const obj = blogs.reduce((acc, curr) =>
+    acc.blogs > curr.blogs ? acc : curr
+  );
+  return obj.author;
+};
+
+const mostLikes = (blogs) => {
+  const obj = blogs.reduce(
+    (acc, curr) => (acc.likes > curr.likes ? acc : curr),
+    0
+  );
+  const { author, likes } = obj;
+  return { author, likes };
+};
+
+module.exports = {
+  dummy,
+  favoriteBlog,
+  mostBlogs,
+  mostLikes,
+};
