@@ -49,6 +49,27 @@ test("blog can be added", async () => {
   expect(blogAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 });
 
+test("if likes property is missing, will default to value 0", async () => {
+  const newBlog = {
+    title: "new title",
+    author: "author author",
+    url: "www.urlurl.com",
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog);
+
+  expect(response.body.likes).toBe(0);
+});
+
+test("if title or url properties are missing, responds with status code 400 bad request", async () => {
+  const newBlog = {
+    author: "author",
+    likes: 9,
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
