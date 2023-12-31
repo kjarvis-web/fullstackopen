@@ -67,7 +67,32 @@ test("if title or url properties are missing, responds with status code 400 bad 
     likes: 9,
   };
 
-  const response = await api.post("/api/blogs").send(newBlog).expect(400);
+  await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
+test("deletes single blog post", async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+});
+
+test("updates information of individual blog post", async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  const newBlog = {
+    _id: "5a422a851b54a676234d17f7",
+    title: "New Title",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 90,
+    __v: 0,
+  };
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const updatedBlog = blogsAtEnd[0];
+  expect(updatedBlog.likes).toBe(90);
 });
 
 afterAll(async () => {
