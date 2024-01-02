@@ -1,20 +1,33 @@
 const blogRouter = require("express").Router();
+const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
-blogRouter.get("/", (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
+blogRouter.get("/", async (request, response) => {
+  const blogs = await Blog.find({}).populate("user", {
+    username: 1,
+    name: 1,
   });
+  response.json(blogs);
 });
 
-blogRouter.post("/", (request, response, next) => {
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
+
+blogRouter.post("/", async (request, response) => {
   const { body } = request;
 
-  // if (!body.likes) {
-  //   return response.status(400).json({
-  //     error: "likes missing",
-  //   });
-  // }
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+
+  const user = await User.findById(body.userId);
 
   if (!body.title || !body.url) {
     return response.status(400).json({
@@ -26,12 +39,17 @@ blogRouter.post("/", (request, response, next) => {
     author: body.author,
     url: body.url,
     likes: body.likes || 0,
+    user: user.id,
   });
 
-  blog
-    .save()
-    .then((formatted) => response.status(201).json(formatted))
-    .catch((error) => next(error));
+  const savedBlog = await blog.save();
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+  response.status(201).json(savedBlog);
+  // blog
+  //   .save()
+  //   .then((formatted) => response.status(201).json(formatted))
+  //   .catch((error) => next(error));
 });
 
 // blogRouter.post("/", (request, response, next) => {

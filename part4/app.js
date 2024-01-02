@@ -7,6 +7,8 @@ const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 const blogRouter = require("./controllers/blogs");
+const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 // mongoose.set("strictQuery", false);
 
@@ -20,7 +22,7 @@ logger.info("connecting to", config.MONGODB_URI);
 // });
 
 // const Blog = mongoose.model("Blog", blogSchema);
-
+mongoose.set("strictQuery", false);
 // const mongoUrl = "mongodb://localhost/bloglist";
 mongoose
   .connect(config.MONGODB_URI)
@@ -32,6 +34,8 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use("/api/blogs", blogRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 // app.get("/api/blogs", (request, response) => {
 //   Blog.find({}).then((blogs) => {
