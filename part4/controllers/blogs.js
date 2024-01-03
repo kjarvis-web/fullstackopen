@@ -51,11 +51,18 @@ blogRouter.post("/", async (request, response) => {
 
 // DELETE
 blogRouter.delete("/:id", async (request, response, next) => {
-  try {
-    await Blog.findByIdAndDelete(request.params.id);
-    response.status(204).end();
-  } catch (exception) {
-    next(exception);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  const blogToBeDeleted = await Blog.findById(request.params.id);
+  const user = await User.findById(decodedToken.id);
+  if (blogToBeDeleted.user._id.toString() === user.id.toString()) {
+    try {
+      await Blog.findByIdAndDelete(request.params.id);
+      response.status(204).end();
+    } catch (exception) {
+      next(exception);
+    }
+  } else {
+    return response.status(401).json({ error: "Can only be deleted by user" });
   }
 });
 

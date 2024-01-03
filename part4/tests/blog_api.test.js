@@ -193,6 +193,23 @@ describe("when there is initially one user in db", () => {
     );
   });
 });
+
+describe("delete", () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash("sekret", 10);
+    const user = new User({ username: "root", passwordHash });
+
+    await user.save();
+  });
+
+  test("blog is only delete by user who created it", async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    await api.delete(`/api/blogs/${usersAtStart[0].id}`).expect(401);
+  });
+});
 afterAll(async () => {
   await mongoose.connection.close();
 });
