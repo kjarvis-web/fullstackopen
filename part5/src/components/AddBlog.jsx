@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const AddBlog = ({ blogs, setBlogs }) => {
+const AddBlog = ({ setErrorMessage, setBlogs, setAdded }) => {
   //   const [newBlog, setNewBlog] = useState({});
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -20,10 +20,20 @@ const AddBlog = ({ blogs, setBlogs }) => {
       .create(newBlog)
       .then((returnedBlog) => {
         console.log(returnedBlog);
+        setAdded(true);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setErrorMessage(error);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
 
     setBlogs((prev) => [...prev, newBlog]);
+    setErrorMessage(`${newBlog.title} by ${newBlog.author} added`);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   };
   return (
     <>
