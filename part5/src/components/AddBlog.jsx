@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const AddBlog = ({ setErrorMessage, setBlogs, setAdded }) => {
+const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
   //   const [newBlog, setNewBlog] = useState({});
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -16,6 +16,7 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded }) => {
     setTitle("");
     setAuthor("");
     setUrl("");
+    blogRef.current.toggleVisibility();
     blogService
       .create(newBlog)
       .then((returnedBlog) => {
