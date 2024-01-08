@@ -2,7 +2,6 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 
 const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
-  //   const [newBlog, setNewBlog] = useState({});
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
