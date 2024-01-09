@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
   const [title, setTitle] = useState("");
@@ -58,6 +59,13 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
       <button onClick={handleCreate}>create</button>
     </>
   );
+};
+
+AddBlog.propTypes = {
+  setErrorMessage: PropTypes.func.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  setAdded: PropTypes.func.isRequired,
+  blogRef: PropTypes.object,
 };
 
 export default AddBlog;
