@@ -1,15 +1,15 @@
-import { useState } from "react";
-import blogService from "../services/blogs";
+import { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, setBlogs }) => {
-  const [showInfo, setShowInfo] = useState(true);
+  const [showInfo, setShowInfo] = useState(true)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const handleLikes = () => {
     const blogObj = {
@@ -17,11 +17,11 @@ const Blog = ({ blog, setBlogs }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-    };
+    }
     blogService.update(blog.id, blogObj).catch((error) => {
-      console.error(error);
-    });
-  };
+      console.error(error)
+    })
+  }
 
   const handleRemove = () => {
     if (confirm(`Remove ${blog.title} by ${blog.author}?`)) {
@@ -30,13 +30,13 @@ const Blog = ({ blog, setBlogs }) => {
         .then((deletedBlog) =>
           console.log(`${deletedBlog} removed successfully`)
         )
-        .catch((error) => console.error(error));
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
-    } else null;
-  };
+        .catch((error) => console.error(error))
+      setBlogs((prev) => prev.filter((b) => b.id !== blog.id))
+    } else null
+  }
 
   return showInfo ? (
-    <div style={blogStyle}>
+    <div className="preview" style={blogStyle}>
       {blog.title} {blog.author}
       <button onClick={() => setShowInfo(!showInfo)}>view</button>
     </div>
@@ -55,7 +55,7 @@ const Blog = ({ blog, setBlogs }) => {
       <button onClick={handleRemove}>Remove</button>
       <hr />
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

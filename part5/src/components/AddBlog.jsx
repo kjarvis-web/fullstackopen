@@ -1,71 +1,71 @@
-import { useState } from "react";
-import blogService from "../services/blogs";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const handleCreate = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const newBlog = {
       title: title,
       author: author,
       url: url,
-    };
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-    blogRef.current.toggleVisibility();
+    }
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    blogRef.current.toggleVisibility()
     blogService
       .create(newBlog)
       .then((returnedBlog) => {
-        console.log(returnedBlog);
-        setAdded(true);
+        console.log(returnedBlog)
+        setAdded(true)
       })
       .catch((error) => {
-        setErrorMessage(error);
+        setErrorMessage(error)
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
+          setErrorMessage(null)
+        }, 5000)
+      })
 
-    setBlogs((prev) => [...prev, newBlog]);
-    setErrorMessage(`${newBlog.title} by ${newBlog.author} added`);
+    setBlogs((prev) => [...prev, newBlog])
+    setErrorMessage(`${newBlog.title} by ${newBlog.author} added`)
     setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
-  };
+      setErrorMessage(null)
+    }, 5000)
+  }
   return (
     <>
       <h2>create new</h2>
-      <label>title: </label>{" "}
+      <label>title: </label>{' '}
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       <br />
-      <label>author: </label>{" "}
+      <label>author: </label>{' '}
       <input
         type="text"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
       />
       <br />
-      <label>url: </label>{" "}
+      <label>url: </label>{' '}
       <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
       <br />
       <button onClick={handleCreate}>create</button>
     </>
-  );
-};
+  )
+}
 
 AddBlog.propTypes = {
   setErrorMessage: PropTypes.func.isRequired,
   setBlogs: PropTypes.func.isRequired,
   setAdded: PropTypes.func.isRequired,
   blogRef: PropTypes.object,
-};
+}
 
-export default AddBlog;
+export default AddBlog
