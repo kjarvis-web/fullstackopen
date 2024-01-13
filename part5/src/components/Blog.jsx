@@ -38,10 +38,12 @@ const Blog = ({ blog, setBlogs }) => {
   return showInfo ? (
     <div className="preview" style={blogStyle}>
       {blog.title} {blog.author}
-      <button onClick={() => setShowInfo(!showInfo)}>view</button>
+      <button className="viewBtn" onClick={() => setShowInfo(!showInfo)}>
+        view
+      </button>
     </div>
   ) : (
-    <div>
+    <div className="allInfo">
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setShowInfo(!showInfo)}>hide</button>
