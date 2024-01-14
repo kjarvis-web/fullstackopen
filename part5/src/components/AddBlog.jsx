@@ -39,11 +39,13 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
   return (
     <>
       <h2>create new</h2>
+      {/* <form onSubmit={handleCreate}> */}
       <label>title: </label>{' '}
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        placeholder="title"
       />
       <br />
       <label>author: </label>{' '}
@@ -51,12 +53,19 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
         type="text"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
+        placeholder="author"
       />
       <br />
       <label>url: </label>{' '}
-      <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+      <input
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder="url"
+      />
       <br />
       <button onClick={handleCreate}>create</button>
+      {/* </form> */}
     </>
   )
 }
