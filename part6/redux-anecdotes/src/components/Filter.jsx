@@ -8,7 +8,7 @@ const Filter = () => {
   }
   return (
     <div>
-      filter
+      filter:{' '}
       <input type="text" onChange={(e) => handleChange(e.target.value)}></input>
     </div>
   )

@@ -5,13 +5,14 @@ const Anecdotes = () => {
   const anecdotes = useSelector((state) => state.anecdotes)
   const filter = useSelector((state) => state.filter)
   const dispatch = useDispatch()
-  console.log(filter)
-  console.log(anecdotes)
+  console.log('filter: ', filter)
+  console.log('anecdotes: ', anecdotes)
   const vote = (id) => {
     dispatch(addVote(id))
   }
 
-  const sorted = anecdotes.sort((a, b) => b.votes - a.votes)
+  const sorted = anecdotes.toSorted((a, b) => b.votes - a.votes)
+
   return (
     <div>
       <h2>Anecdotes</h2>
