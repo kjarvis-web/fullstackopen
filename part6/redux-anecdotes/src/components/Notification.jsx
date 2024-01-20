@@ -1,14 +1,20 @@
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
-  const notification = useSelector((state) => state.anecdotes.slice(-1))
-  console.log(notification[0].content)
+  const id = useSelector((state) => state.notification)
+  const findAnec = useSelector((state) =>
+    state.anecdotes.find((c) => c.id === id)
+  )
+  console.log(findAnec)
+
   const style = {
     border: 'solid',
     padding: 10,
     borderWidth: 1,
   }
-  return <div style={style}>{notification[0].content}</div>
+  return id !== '' ? (
+    <div style={style}>you voted for '{findAnec.content}'</div>
+  ) : null
 }
 
 export default Notification
