@@ -2,7 +2,7 @@
   "anecdotes": [
     {
       "content": "Adding manpower to a late software project makes it later!",
-      "votes": 20,
+      "votes": 37,
       "id": "21149"
     },
     {
@@ -38,6 +38,21 @@
     {
       "id": "bc03",
       "content": "new line here",
+      "votes": 0
+    },
+    {
+      "id": "4fb2",
+      "content": "price i pay, destiny is calling me",
+      "votes": 0
+    },
+    {
+      "id": "d43d",
+      "content": "add another",
+      "votes": 0
+    },
+    {
+      "id": "c6d4",
+      "content": "earth is dying, help me ",
       "votes": 0
     }
   ]

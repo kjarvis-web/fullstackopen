@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { addVote, handleVote, updateVote } from '../reducers/anecdoteReducer'
+import { addVote, handleVote } from '../reducers/anecdoteReducer'
 import { notify, resetNotify } from '../reducers/notificationReducer'
 import anecdoteService from '../services/anecdotes'
 
@@ -13,10 +13,11 @@ const Anecdotes = () => {
       content: anecdote.content,
       votes: anecdote.votes + 1,
     }
-    // anecdoteService.updateVote(id, obj).catch((error) => console.error(error))
-    dispatch(addVote(id))
+    // anecdoteService.update(id, obj).catch((error) => console.error(error))
+    // dispatch(addVote(id))
+    dispatch(handleVote(anecdote))
     dispatch(notify(id))
-    dispatch(updateVote(id, obj))
+    // dispatch(handleVote(id, obj))
     setTimeout(() => {
       dispatch(resetNotify(''))
     }, 5000)
