@@ -12,9 +12,7 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1,
   }
-  return id !== '' ? (
-    <div style={style}>you voted for '{findAnec.content}'</div>
-  ) : null
+  return id.length !== 0 ? <div style={style}>you voted for '{id}'</div> : null
 }
 
 export default Notification

@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { addVote, handleVote } from '../reducers/anecdoteReducer'
-import { notify, resetNotify } from '../reducers/notificationReducer'
+import {
+  notify,
+  resetNotify,
+  setNotification,
+} from '../reducers/notificationReducer'
 import anecdoteService from '../services/anecdotes'
 
 const Anecdotes = () => {
@@ -9,18 +13,18 @@ const Anecdotes = () => {
   const dispatch = useDispatch()
   const vote = (id) => {
     const anecdote = anecdotes.find((a) => a.id === id)
-    const obj = {
-      content: anecdote.content,
-      votes: anecdote.votes + 1,
-    }
+    // const obj = {
+    //   content: anecdote.content,
+    //   votes: anecdote.votes + 1,
+    // }
     // anecdoteService.update(id, obj).catch((error) => console.error(error))
     // dispatch(addVote(id))
     dispatch(handleVote(anecdote))
-    dispatch(notify(id))
-    // dispatch(handleVote(id, obj))
-    setTimeout(() => {
-      dispatch(resetNotify(''))
-    }, 5000)
+    // dispatch(notify('why'))
+    // setTimeout(() => {
+    //   dispatch(resetNotify(''))
+    // }, 5000)
+    dispatch(setNotification(`you voted for ${anecdote.content}`, 5000))
   }
 
   const sorted = anecdotes.toSorted((a, b) => b.votes - a.votes)
