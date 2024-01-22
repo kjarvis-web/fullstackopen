@@ -1,7 +1,7 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { getAll } from './requests'
-import { useQuery } from '@tanstack/react-query'
+import { createNew, getAll } from './requests'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const App = () => {
   const handleVote = (anecdote) => {
@@ -11,7 +11,6 @@ const App = () => {
     queryKey: ['anecdotes'],
     queryFn: getAll,
   })
-  console.log(JSON.parse(JSON.stringify(result)))
   const anecdotes = result.data
 
   if (result.isPending) {
