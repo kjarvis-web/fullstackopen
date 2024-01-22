@@ -8,3 +8,7 @@ export const getAll = () => {
 export const createNew = (content) => {
   return axios.post(baseUrl, content).then((res) => res.data)
 }
+
+export const update = (updated) => {
+  return axios.put(`${baseUrl}/${updated.id}`, updated).then((res) => res.data)
+}
