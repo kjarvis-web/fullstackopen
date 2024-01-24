@@ -14,10 +14,14 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [added, setAdded] = useState(false)
   const blogRef = useRef()
+  const [fetch, setFetch] = useState(false)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [blogs, setBlogs])
+    blogService.getAll().then((blogs) => {
+      setBlogs(blogs)
+      setFetch(false)
+    })
+  }, [fetch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -68,6 +72,7 @@ const App = () => {
           <div>
             username
             <input
+              id="username"
               type="text"
               value={username}
               onChange={({ target }) => setUsername(target.value)}
@@ -76,12 +81,15 @@ const App = () => {
           <div>
             password{' '}
             <input
+              id="password"
               type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit">login</button>
+          <button id="login-button" type="submit">
+            login
+          </button>
         </form>
       </div>
     )
@@ -98,12 +106,18 @@ const App = () => {
           setErrorMessage={setErrorMessage}
           setAdded={setAdded}
           blogRef={blogRef}
+          setFetch={setFetch}
         />
       </Togglable>
 
       <h2>blogs</h2>
       {sorted.map((blog) => (
-        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          setBlogs={setBlogs}
+          setFetch={setFetch}
+        />
       ))}
     </div>
   )

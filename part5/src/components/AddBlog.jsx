@@ -2,7 +2,13 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
+const AddBlog = ({
+  setErrorMessage,
+  setBlogs,
+  setAdded,
+  blogRef,
+  setFetch,
+}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -16,11 +22,13 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    setFetch(true)
     blogRef.current.toggleVisibility()
     blogService
       .create(newBlog)
       .then((returnedBlog) => {
         console.log(returnedBlog)
+        setBlogs((prev) => [...prev, returnedBlog])
         setAdded(true)
       })
       .catch((error) => {
@@ -30,7 +38,6 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
         }, 5000)
       })
 
-    setBlogs((prev) => [...prev, newBlog])
     setErrorMessage(`${newBlog.title} by ${newBlog.author} added`)
     setTimeout(() => {
       setErrorMessage(null)
@@ -42,6 +49,7 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
       {/* <form onSubmit={handleCreate}> */}
       <label>title: </label>{' '}
       <input
+        id="title"
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -50,6 +58,7 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
       <br />
       <label>author: </label>{' '}
       <input
+        id="author"
         type="text"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
@@ -58,13 +67,16 @@ const AddBlog = ({ setErrorMessage, setBlogs, setAdded, blogRef }) => {
       <br />
       <label>url: </label>{' '}
       <input
+        id="url"
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="url"
       />
       <br />
-      <button onClick={handleCreate}>create</button>
+      <button id="create" onClick={handleCreate}>
+        create
+      </button>
       {/* </form> */}
     </>
   )

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setBlogs }) => {
+const Blog = ({ blog, setBlogs, setFetch }) => {
   const [showInfo, setShowInfo] = useState(true)
   const blogStyle = {
     paddingTop: 10,
@@ -21,6 +21,7 @@ const Blog = ({ blog, setBlogs }) => {
     blogService.update(blog.id, blogObj).catch((error) => {
       console.error(error)
     })
+    setFetch(true)
   }
 
   const handleRemove = () => {
