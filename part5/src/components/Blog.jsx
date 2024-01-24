@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setBlogs, setFetch }) => {
+const Blog = ({ blog, setBlogs, setFetch, user }) => {
   const [showInfo, setShowInfo] = useState(true)
   const blogStyle = {
     paddingTop: 10,
@@ -57,7 +57,10 @@ const Blog = ({ blog, setBlogs, setFetch }) => {
         </button>
       </div>
       {blog.user ? <div>{blog.user.name}</div> : <div>no user</div>}
-      <button onClick={handleRemove}>Remove</button>
+      {user.username === blog.user.username ? (
+        <button onClick={handleRemove}>Remove</button>
+      ) : null}
+
       <hr />
     </div>
   )

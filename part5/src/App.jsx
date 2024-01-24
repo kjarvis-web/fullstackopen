@@ -99,7 +99,7 @@ const App = () => {
     <div>
       <Notification added={added} message={errorMessage} />
       <p>{user.username} is logged in</p>
-      <button onClick={handleLogout}>Log out</button>
+      <button id="logout" onClick={handleLogout}>Log out</button>
       <Togglable buttonLabel="add blog" ref={blogRef}>
         <AddBlog
           setBlogs={setBlogs}
@@ -117,6 +117,7 @@ const App = () => {
           blog={blog}
           setBlogs={setBlogs}
           setFetch={setFetch}
+          user={user}
         />
       ))}
     </div>

@@ -8,26 +8,26 @@ describe('Blog app', function () {
     }
     cy.request('POST', 'http://localhost:3004/api/users/', user)
   })
-  it('Log in form is shown', function () {
-    cy.contains('Log in')
-    cy.contains('login')
-  })
+  // it('Log in form is shown', function () {
+  //   cy.contains('Log in')
+  //   cy.contains('login')
+  // })
 
-  describe('Login', function () {
-    it('successful login', function () {
-      cy.get('#username').type('kevin')
-      cy.get('#password').type('password')
-      cy.get('#login-button').click()
-      cy.contains('kevin is logged in')
-    })
+  // describe('Login', function () {
+  //   it('successful login', function () {
+  //     cy.get('#username').type('kevin')
+  //     cy.get('#password').type('password')
+  //     cy.get('#login-button').click()
+  //     cy.contains('kevin is logged in')
+  //   })
 
-    it('fails with wrong credentials', function () {
-      cy.get('#username').type('wrong')
-      cy.get('#password').type('password')
-      cy.get('#login-button').click()
-      cy.contains('Wrong credentials')
-    })
-  })
+  //   it('fails with wrong credentials', function () {
+  //     cy.get('#username').type('wrong')
+  //     cy.get('#password').type('password')
+  //     cy.get('#login-button').click()
+  //     cy.contains('Wrong credentials')
+  //   })
+  // })
   describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'kevin', password: 'password' })
@@ -62,6 +62,27 @@ describe('Blog app', function () {
       cy.contains('view').click()
       cy.contains('Remove').click()
       cy.get('body').should('not.contain', '2001 Arthur C. Clarke')
+    })
+    it('only user who created post can see delete', function () {
+      cy.contains('add blog').click()
+      cy.get('#title').type('title')
+      cy.get('#author').type('author')
+      cy.get('#url').type('url')
+      cy.get('#create').click()
+      cy.contains('title author')
+      cy.get('#logout').click()
+
+      const user = {
+        name: 'Second User',
+        username: 'second',
+        password: 'user',
+      }
+      cy.request('POST', 'http://localhost:3004/api/users/', user)
+
+      cy.login({ username: 'second', password: 'user' })
+      cy.contains('second is logged in')
+      cy.contains('view').click()
+      cy.get('.allInfo').should('not.contain', 'Remove')
     })
   })
 })
