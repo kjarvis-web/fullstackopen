@@ -14,21 +14,19 @@ describe('Blog app', function () {
     cy.contains('login')
   })
 
-  describe('when logged in', function () {
-    beforeEach(function () {
+  describe('Login', function () {
+    it('successful login', function () {
       cy.get('#username').type('kevin')
       cy.get('#password').type('password')
       cy.get('#login-button').click()
       cy.contains('kevin is logged in')
     })
 
-    it('a new blog can be added', function () {
-      cy.contains('add blog').click()
-      cy.get('#title').type('blog created by cypress')
-      cy.get('#author').type('blog created by cypress -author')
-      cy.get('#url').type('url by cypress')
-      cy.get('#create').click()
-      cy.contains('blog created by cypress')
+    it('fails with wrong credentials', function () {
+      cy.get('#username').type('wrong')
+      cy.get('#password').type('password')
+      cy.get('#login-button').click()
+      cy.contains('Wrong credentials')
     })
   })
 })
