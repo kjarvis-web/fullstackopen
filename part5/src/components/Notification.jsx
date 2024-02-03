@@ -1,4 +1,6 @@
-const Notification = ({ added, message }) => {
+import { useSelector } from 'react-redux'
+
+const Notification = ({ added }) => {
   const stylesAdded = {
     color: 'green',
     fontSize: 32,
@@ -19,11 +21,12 @@ const Notification = ({ added, message }) => {
     padding: 4,
   }
 
-  if (message === null) return null
+  const notification = useSelector(state => state)
+  if (notification === null) return null
 
   return (
     <div style={added ? stylesAdded : stylesError} className="notification">
-      {message}
+      {notification}
     </div>
   )
 }

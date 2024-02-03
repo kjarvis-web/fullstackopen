@@ -5,6 +5,7 @@ import loginService from './services/login'
 import AddBlog from './components/AddBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +16,9 @@ const App = () => {
   const [added, setAdded] = useState(false)
   const blogRef = useRef()
   const [fetch, setFetch] = useState(false)
+
+  const dispatch = useDispatch()
+  const notification = useSelector((state) => state)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -44,9 +48,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      dispatch({ type: 'NOTIFY', payload: 'WRONG' })
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch({ type: 'RESET' })
       }, 5000)
     }
   }
@@ -66,7 +70,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -99,7 +103,9 @@ const App = () => {
     <div>
       <Notification added={added} message={errorMessage} />
       <p>{user.username} is logged in</p>
-      <button id="logout" onClick={handleLogout}>Log out</button>
+      <button id="logout" onClick={handleLogout}>
+        Log out
+      </button>
       <Togglable buttonLabel="add blog" ref={blogRef}>
         <AddBlog
           setBlogs={setBlogs}
