@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-const Notification = ({ added }) => {
+const Notification = () => {
   const stylesAdded = {
     color: 'green',
     fontSize: 32,
@@ -21,14 +21,10 @@ const Notification = ({ added }) => {
     padding: 4,
   }
 
-  const notification = useSelector(state => state)
+  const notification = useSelector((state) => state.notification)
   if (notification === null) return null
 
-  return (
-    <div style={added ? stylesAdded : stylesError} className="notification">
-      {notification}
-    </div>
-  )
+  return <div className="notification">{notification}</div>
 }
 
 export default Notification

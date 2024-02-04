@@ -6,23 +6,25 @@ import AddBlog from './components/AddBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
+import { notify, reset } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [added, setAdded] = useState(false)
   const blogRef = useRef()
   const [fetch, setFetch] = useState(false)
 
   const dispatch = useDispatch()
-  const notification = useSelector((state) => state)
+  const storeBlogs = useSelector((state) => state.blogs)
+  console.log(storeBlogs)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
-      setBlogs(blogs)
+      dispatch(initializeBlogs(blogs))
+      // setBlogs(blogs)
       setFetch(false)
     })
   }, [fetch])
@@ -48,9 +50,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      dispatch({ type: 'NOTIFY', payload: 'WRONG' })
+      dispatch(notify('WRONG CREDENTIALS'))
       setTimeout(() => {
-        dispatch({ type: 'RESET' })
+        dispatch(reset())
       }, 5000)
     }
   }
@@ -65,7 +67,7 @@ const App = () => {
     }
   }
 
-  const sorted = [...blogs].sort((a, b) => b.likes - a.likes)
+  const sorted = [...storeBlogs].sort((a, b) => b.likes - a.likes)
 
   if (user === null) {
     return (
@@ -101,19 +103,13 @@ const App = () => {
 
   return (
     <div>
-      <Notification added={added} message={errorMessage} />
+      <Notification />
       <p>{user.username} is logged in</p>
       <button id="logout" onClick={handleLogout}>
         Log out
       </button>
       <Togglable buttonLabel="add blog" ref={blogRef}>
-        <AddBlog
-          setBlogs={setBlogs}
-          setErrorMessage={setErrorMessage}
-          setAdded={setAdded}
-          blogRef={blogRef}
-          setFetch={setFetch}
-        />
+        <AddBlog setBlogs={setBlogs} blogRef={blogRef} setFetch={setFetch} />
       </Togglable>
 
       <h2>blogs</h2>
