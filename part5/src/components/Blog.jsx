@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { setFetch } from '../reducers/fetchReducer'
 
-const Blog = ({ blog, setBlogs, setFetch, user }) => {
+const Blog = ({ blog, user }) => {
   const [showInfo, setShowInfo] = useState(true)
   const blogStyle = {
     paddingTop: 10,
@@ -11,6 +13,8 @@ const Blog = ({ blog, setBlogs, setFetch, user }) => {
     marginBottom: 5,
   }
 
+  const dispatch = useDispatch()
+
   const handleLikes = () => {
     const blogObj = {
       title: blog.title,
@@ -18,21 +22,19 @@ const Blog = ({ blog, setBlogs, setFetch, user }) => {
       url: blog.url,
       likes: blog.likes + 1,
     }
-    blogService.update(blog.id, blogObj).catch((error) => {
-      console.error(error)
-    })
-    setFetch(true)
+    blogService.update(blog.id, blogObj).catch((error) => console.error(error))
+    dispatch(setFetch(true))
   }
 
   const handleRemove = () => {
     if (confirm(`Remove ${blog.title} by ${blog.author}?`)) {
       blogService
         .remove(blog.id)
-        .then((deletedBlog) =>
+        .then((deletedBlog) => {
           console.log(`${deletedBlog} removed successfully`)
-        )
+          dispatch(setFetch(true))
+        })
         .catch((error) => console.error(error))
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id))
     } else null
   }
 
@@ -56,11 +58,15 @@ const Blog = ({ blog, setBlogs, setFetch, user }) => {
           like
         </button>
       </div>
-      {blog.user ? <div>{blog.user.name}</div> : <div>no user</div>}
-      {user.username === blog.user.username ? (
-        <button onClick={handleRemove}>Remove</button>
-      ) : null}
 
+      {blog.user ? <div>{blog.user.name}</div> : <div>no user</div>}
+      {blog.user ? (
+        user.username === blog.user.username ? (
+          <button onClick={handleRemove}>Remove</button>
+        ) : null
+      ) : (
+        <div>no user</div>
+      )}
       <hr />
     </div>
   )

@@ -9,19 +9,16 @@ import {
   setTitle,
   setUrl,
 } from '../reducers/addBlogReducer'
+import { setFetch } from '../reducers/fetchReducer'
+import { addBlog } from '../reducers/blogsReducer'
 // import PropTypes from 'prop-types'
 
-const AddBlog = ({
-  setBlogs,
-
-  blogRef,
-  setFetch,
-}) => {
+const AddBlog = ({ blogRef }) => {
   const dispatch = useDispatch()
   const blog = useSelector((state) => state.addBlog)
   const handleCreate = (e) => {
     e.preventDefault()
-    setFetch(true)
+    dispatch(setFetch(true))
     blogRef.current.toggleVisibility()
     blogService
       .create(blog)
@@ -31,7 +28,7 @@ const AddBlog = ({
           dispatch(reset(null))
         }, 5000)
         dispatch(clearForm())
-        setBlogs((prev) => [...prev, returnedBlog])
+        dispatch(addBlog(returnedBlog))
       })
       .catch((error) => {
         console.error(error)
