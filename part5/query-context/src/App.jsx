@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import AddBlog from './components/AddBlog'
@@ -8,39 +7,29 @@ import Togglable from './components/Togglable'
 import { useQuery } from '@tanstack/react-query'
 import { useContext } from 'react'
 import BlogContext from './context/BlogContext'
+import BlogList from './components/BlogList'
+import Blog from './components/Blog'
+import UserContext from './context/UserContext'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [added, setAdded] = useState(false)
-  const blogRef = useRef()
-  const [fetch, setFetch] = useState(false)
   const [notification, dispatch] = useContext(BlogContext)
+  const [user, setUser] = useContext(UserContext)
+  const blogRef = useRef()
   const result = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
   })
 
-  console.log(JSON.parse(JSON.stringify(result)))
-
   const queryBlogs = result.data
-  console.log(queryBlogs)
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      setBlogs(blogs)
-      setFetch(false)
-    })
-  }, [fetch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      setUser({ type: 'LOGIN', payload: user })
       blogService.setToken(user.token)
     }
   }, [])
@@ -53,7 +42,7 @@ const App = () => {
         password,
       })
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
-      setUser(user)
+      setUser({ type: 'LOGIN', payload: user })
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -68,7 +57,7 @@ const App = () => {
     event.preventDefault()
     try {
       window.localStorage.removeItem('loggedBlogUser')
-      setUser(null)
+      setUser({ type: 'LOGOUT' })
     } catch (exception) {
       console.log(exception)
     }
@@ -120,25 +109,14 @@ const App = () => {
         Log out
       </button>
       <Togglable buttonLabel="add blog" ref={blogRef}>
-        <AddBlog
-          setBlogs={setBlogs}
-          setErrorMessage={setErrorMessage}
-          setAdded={setAdded}
-          blogRef={blogRef}
-          setFetch={setFetch}
-        />
+        <AddBlog setAdded={setAdded} blogRef={blogRef} />
       </Togglable>
 
       <h2>blogs</h2>
       {sorted.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          setBlogs={setBlogs}
-          setFetch={setFetch}
-          user={user}
-        />
+        <Blog key={blog.id} blog={blog} user={user} />
       ))}
+      {/* <BlogList /> */}
     </div>
   )
 }

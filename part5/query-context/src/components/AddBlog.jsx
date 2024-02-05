@@ -1,38 +1,36 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import BlogContext from '../context/BlogContext'
 
-const AddBlog = ({
-  setErrorMessage,
-  setBlogs,
-  setAdded,
-  blogRef,
-  setFetch,
-}) => {
+const AddBlog = ({ setAdded, blogRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [notification, dispatch] = useContext(BlogContext)
+  const [notification, setNotification] = useContext(BlogContext)
+
+  const queryClient = useQueryClient()
 
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
-    onSuccess: (returnedBlog) => {
-      setBlogs((prev) => [...prev, returnedBlog])
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
       setAdded(true)
-      // setErrorMessage(`${newBlog.title} by ${newBlog.author} added`)
-      dispatch({ type: 'NOTIFY', payload: `${title} by ${author} added` })
+      setNotification({
+        type: 'NOTIFY',
+        payload: `${title} by ${author} added`,
+      })
       setTimeout(() => {
-        dispatch({ type: 'RESET' })
+        setNotification({ type: 'RESET' })
       }, 5000)
     },
     onError: (error) => {
       console.error(error)
-      setErrorMessage(error.data.error)
+      setNotification({ type: 'NOTIFY', payload: error.data.error })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification({ type: 'RESET' })
       }, 5000)
     },
   })
@@ -44,8 +42,6 @@ const AddBlog = ({
       author: author,
       url: url,
     }
-
-    setFetch(true)
     blogRef.current.toggleVisibility()
     newBlogMutation.mutate(newBlog)
   }
@@ -88,11 +84,11 @@ const AddBlog = ({
   )
 }
 
-AddBlog.propTypes = {
-  setErrorMessage: PropTypes.func.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  setAdded: PropTypes.func.isRequired,
-  blogRef: PropTypes.object,
-}
+// AddBlog.propTypes = {
+//   setErrorMessage: PropTypes.func.isRequired,
+//   setBlogs: PropTypes.func.isRequired,
+//   setAdded: PropTypes.func.isRequired,
+//   blogRef: PropTypes.object,
+// }
 
 export default AddBlog

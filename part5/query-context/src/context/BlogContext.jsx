@@ -1,5 +1,6 @@
-import { useReducer } from 'react'
+import { useContext, useReducer } from 'react'
 import { createContext } from 'react'
+import Blog from '../components/Blog'
 
 const BlogContext = createContext()
 

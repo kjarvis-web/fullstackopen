@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-const Blog = ({ blog, setBlogs, setFetch, user }) => {
-  const [showInfo, setShowInfo] = useState(true)
+const Blog = ({ blog, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,29 +10,37 @@ const Blog = ({ blog, setBlogs, setFetch, user }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
+  const [showInfo, setShowInfo] = useState(true)
+
+  const queryClient = useQueryClient()
+
+  const removeBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: () => {
+      console.log('mutation remove')
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    },
+    onError: (error) => {
+      conole.error(error)
+    },
+  })
+
+  const handleLikesMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: () => {
+      console.log('like mutation')
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    },
+    onError: (error) => console.error(error),
+  })
 
   const handleLikes = () => {
-    const blogObj = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-    }
-    blogService.update(blog.id, blogObj).catch((error) => {
-      console.error(error)
-    })
-    setFetch(true)
+    handleLikesMutation.mutate({ ...blog, likes: blog.likes + 1 })
   }
 
   const handleRemove = () => {
     if (confirm(`Remove ${blog.title} by ${blog.author}?`)) {
-      blogService
-        .remove(blog.id)
-        .then((deletedBlog) =>
-          console.log(`${deletedBlog} removed successfully`)
-        )
-        .catch((error) => console.error(error))
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id))
+      removeBlogMutation.mutate(blog.id)
     } else null
   }
 
