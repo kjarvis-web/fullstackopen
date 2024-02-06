@@ -9,12 +9,13 @@ import { initializeBlogs } from './reducers/blogsReducer'
 import { setFetch } from './reducers/fetchReducer'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import BlogList from './components/BlogList'
+import Users from './components/Users'
 
 const App = () => {
   const blogRef = useRef()
-
   const dispatch = useDispatch()
-  const blogs = useSelector((state) => state.blogs)
   const fetch = useSelector((state) => state.fetch)
   const user = useSelector((state) => state.user)
 
@@ -24,8 +25,6 @@ const App = () => {
       dispatch(setFetch(false))
     })
   }, [fetch])
-
-  const sorted = [...blogs].sort((a, b) => b.likes - a.likes)
 
   if (user === null) {
     return (
@@ -37,18 +36,19 @@ const App = () => {
   }
 
   return (
-    <div>
-      <Notification />
-      <Logout />
-      <Togglable buttonLabel="add blog" ref={blogRef}>
-        <AddBlog blogRef={blogRef} />
-      </Togglable>
-
-      <h2>blogs</h2>
-      {sorted.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} />
-      ))}
-    </div>
+    <Router>
+      <div>
+        <Notification />
+        <Logout />
+        <Togglable buttonLabel="add blog" ref={blogRef}>
+          <AddBlog blogRef={blogRef} />
+        </Togglable>
+        <Routes>
+          <Route path="/" element={<BlogList />} />
+          <Route path="users" element={<Users />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
