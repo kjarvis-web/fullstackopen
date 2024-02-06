@@ -10,6 +10,8 @@ const User = () => {
   const id = useParams().id
   const user = users.find((user) => user.id === id)
 
+  if (!user) return
+
   return (
     <div>
       <h2>{user.username}</h2>
