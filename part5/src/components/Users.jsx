@@ -1,16 +1,7 @@
-import { useEffect } from 'react'
-import userService from '../services/users'
-import { setUsers } from '../reducers/usersReducer'
 import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-const Users = () => {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    userService.getUsers().then((users) => dispatch(setUsers(users)))
-  }, [])
 
+const Users = () => {
   const users = useSelector((state) => state.users)
-  console.log(users)
   return (
     <div>
       <h2>Users</h2>
