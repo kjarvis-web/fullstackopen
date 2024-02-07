@@ -9,7 +9,6 @@ import {
   setTitle,
   setUrl,
 } from '../reducers/addBlogReducer'
-import { setFetch } from '../reducers/fetchReducer'
 import { addBlog } from '../reducers/blogsReducer'
 // import PropTypes from 'prop-types'
 
@@ -18,7 +17,6 @@ const AddBlog = ({ blogRef }) => {
   const blog = useSelector((state) => state.addBlog)
   const handleCreate = (e) => {
     e.preventDefault()
-    dispatch(setFetch(true))
     blogRef.current.toggleVisibility()
     blogService
       .create(blog)

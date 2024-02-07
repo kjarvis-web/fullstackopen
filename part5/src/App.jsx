@@ -6,30 +6,37 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogsReducer'
-import { setFetch } from './reducers/fetchReducer'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import BlogList from './components/BlogList'
-import Users from './components/Users'
+import Users from './components/UserList'
 import User from './components/User'
 import userService from './services/users'
 import { setUsers } from './reducers/usersReducer'
+import BlogSingle from './components/BlogSingle'
 
 const App = () => {
   const blogRef = useRef()
   const dispatch = useDispatch()
-  const fetch = useSelector((state) => state.fetch)
   const user = useSelector((state) => state.user)
   const users = useSelector((state) => state.users)
+  const blogs = useSelector((state) => state.blogs)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      dispatch(initializeBlogs(blogs))
-      dispatch(setFetch(false))
-    })
-  }, [fetch])
+    const fetch = async () => {
+      try {
+        blogService.getAll().then((blogs) => {
+          dispatch(initializeBlogs(blogs))
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetch()
+  }, [])
 
+  console.log(blogs)
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -64,6 +71,7 @@ const App = () => {
           <Route path="/" element={<BlogList />} />
           <Route path="users" element={<Users />} />
           <Route path="/users/:id" element={<User />} />
+          <Route path="/blogs/:id" element={<BlogSingle />} />
         </Routes>
       </div>
     </Router>

@@ -7,7 +7,6 @@ import { combineReducers } from 'redux'
 
 import blogsReducer from './reducers/blogsReducer'
 import addBlogReducer from './reducers/addBlogReducer'
-import fetchReducer from './reducers/fetchReducer'
 import userReducer from './reducers/userReducer'
 import usersReducer from './reducers/usersReducer'
 
@@ -15,7 +14,6 @@ const reducer = combineReducers({
   notification: notificationReducer,
   blogs: blogsReducer,
   addBlog: addBlogReducer,
-  fetch: fetchReducer,
   user: userReducer,
   users: usersReducer,
 })

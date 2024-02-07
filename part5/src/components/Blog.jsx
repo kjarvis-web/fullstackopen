@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useDispatch } from 'react-redux'
-import { setFetch } from '../reducers/fetchReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, user }) => {
   const [showInfo, setShowInfo] = useState(true)
@@ -23,7 +23,6 @@ const Blog = ({ blog, user }) => {
       likes: blog.likes + 1,
     }
     blogService.update(blog.id, blogObj).catch((error) => console.error(error))
-    dispatch(setFetch(true))
   }
 
   const handleRemove = () => {
@@ -32,43 +31,44 @@ const Blog = ({ blog, user }) => {
         .remove(blog.id)
         .then((deletedBlog) => {
           console.log(`${deletedBlog} removed successfully`)
-          dispatch(setFetch(true))
         })
         .catch((error) => console.error(error))
     } else null
   }
 
-  return showInfo ? (
+  return (
     <div className="preview" style={blogStyle}>
-      {blog.title} {blog.author}
-      <button className="viewBtn" onClick={() => setShowInfo(!showInfo)}>
-        view
-      </button>
-    </div>
-  ) : (
-    <div className="allInfo">
-      <div>
+      <Link to={`/blogs/${blog.id}`}>
         {blog.title} {blog.author}
-        <button onClick={() => setShowInfo(!showInfo)}>hide</button>
-      </div>
-      <div>{blog.url}</div>
-      <div>
-        likes {blog.likes}
-        <button className="likeBtn" onClick={handleLikes}>
-          like
-        </button>
-      </div>
-
-      {blog.user ? <div>{blog.user.name}</div> : <div>no user</div>}
-      {blog.user ? (
-        user.username === blog.user.username ? (
-          <button onClick={handleRemove}>Remove</button>
-        ) : null
-      ) : (
-        <div>no user</div>
-      )}
-      <hr />
+      </Link>
+      {/* <button className="viewBtn" onClick={() => setShowInfo(!showInfo)}>
+        view
+      </button> */}
     </div>
+    // ) : (
+    //   <div className="allInfo">
+    //     <div>
+    //       {blog.title} {blog.author}
+    //       <button onClick={() => setShowInfo(!showInfo)}>hide</button>
+    //     </div>
+    //     <div>{blog.url}</div>
+    //     <div>
+    //       likes {blog.likes}
+    //       <button className="likeBtn" onClick={handleLikes}>
+    //         like
+    //       </button>
+    //     </div>
+
+    //     {blog.user ? <div>{blog.user.name}</div> : <div>no user</div>}
+    //     {blog.user ? (
+    //       user.username === blog.user.username ? (
+    //         <button onClick={handleRemove}>Remove</button>
+    //       ) : null
+    //     ) : (
+    //       <div>no user</div>
+    //     )}
+    //     <hr />
+    //   </div>
   )
 }
 
