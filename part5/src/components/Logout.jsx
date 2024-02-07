@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { logout } from '../reducers/userReducer'
+import { Link } from 'react-router-dom'
 
 const Logout = () => {
   const dispatch = useDispatch()
@@ -15,7 +16,21 @@ const Logout = () => {
     }
   }
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+        backgroundColor: 'silver',
+        marginBottom: '1rem',
+      }}
+    >
+      <Link to={'/'}>
+        <div>blogs</div>
+      </Link>
+      <Link to={'users'}>
+        <div>users</div>
+      </Link>
       <p>{user.username} is logged in</p>
       <button id="logout" onClick={handleLogout}>
         Log out

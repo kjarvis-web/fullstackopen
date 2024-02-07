@@ -69,7 +69,7 @@ const App = () => {
         </Togglable>
         <Routes>
           <Route path="/" element={<BlogList />} />
-          <Route path="users" element={<Users />} />
+          <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<User />} />
           <Route path="/blogs/:id" element={<BlogSingle />} />
         </Routes>
