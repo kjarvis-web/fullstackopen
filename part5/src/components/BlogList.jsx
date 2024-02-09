@@ -1,5 +1,7 @@
 import { useSelector } from 'react-redux'
+import { Table } from 'react-bootstrap'
 import Blog from './Blog'
+import { Link } from 'react-router-dom'
 
 const BlogList = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -8,9 +10,19 @@ const BlogList = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {sorted.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} />
-      ))}
+      <Table striped>
+        <tbody>
+          {sorted.map((blog) => (
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} by {blog.author}
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   )
 }

@@ -57,7 +57,7 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <div className="container">
         <Notification />
         <Logout />
         <Togglable buttonLabel="add blog" ref={blogRef}>

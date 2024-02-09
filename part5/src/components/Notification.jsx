@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Alert } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
@@ -24,7 +26,19 @@ const Notification = () => {
   const notification = useSelector((state) => state.notification)
   if (notification === null) return null
 
-  return <div className="notification">{notification}</div>
+  return (
+    <div className="container">
+      {notification === 'WRONG CREDENTIALS' ? (
+        <Alert variant="danger" className="notification">
+          {notification}
+        </Alert>
+      ) : (
+        <Alert variant="success" className="notification">
+          {notification}
+        </Alert>
+      )}
+    </div>
+  )
 }
 
 export default Notification
