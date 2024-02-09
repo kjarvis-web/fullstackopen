@@ -20,8 +20,6 @@ const App = () => {
   const blogRef = useRef()
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
-  const users = useSelector((state) => state.users)
-  const blogs = useSelector((state) => state.blogs)
 
   useEffect(() => {
     const fetch = async () => {
@@ -36,13 +34,11 @@ const App = () => {
     fetch()
   }, [])
 
-  console.log(blogs)
   useEffect(() => {
     const fetch = async () => {
       try {
         const users = await userService.getUsers()
         dispatch(setUsers(users))
-        console.log(users)
       } catch (error) {
         console.error(error)
       }

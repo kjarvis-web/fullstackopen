@@ -1,13 +1,29 @@
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import blogService from '../services/blogs'
+import { useDispatch } from 'react-redux'
+import { addComment } from '../reducers/blogsReducer'
 
 const BlogSingle = () => {
   const blogs = useSelector((state) => state.blogs)
-  console.log(blogs)
   const id = useParams().id
-  console.log(id)
   const blog = blogs.find((blog) => blog.id === id)
-  console.log(blog)
+  console.log(blog.comments)
+  blog.comments.map((x) => console.log(x.comment))
+  const [comment, setComment] = useState('')
+  const dispatch = useDispatch()
+
+  const handleComment = (comment) => {
+    blogService
+      .addComment(id, comment)
+      .then(() => {
+        console.log(blogs)
+        dispatch(addComment(comment, id))
+        setComment('')
+      })
+      .catch((error) => console.error(error))
+  }
 
   return (
     <div>
@@ -22,9 +38,17 @@ const BlogSingle = () => {
         <div>added by {blog.user.username}</div>
       )}
       <h3>comments</h3>
+      <div>
+        <input
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button onClick={() => handleComment({ comment })}>add comment</button>
+      </div>
       <ul>
-        {blog.comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
+        {blog.comments.map((c, index) => (
+          <li key={index}>{c.comment}</li>
         ))}
       </ul>
     </div>
