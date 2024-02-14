@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { useState } from 'react'
 
 export const ALL_AUTHORS = gql`
   query {
@@ -6,12 +7,35 @@ export const ALL_AUTHORS = gql`
       name
       bookCount
       born
+      id
+    }
+  }
+`
+const EDIT_AUTHOR = gql`
+  mutation editAuthor($name: String!, $setBornTo: Int!) {
+    editAuthor(name: $name, setBornTo: $setBornTo) {
+      name
+      bookCount
+      born
+      id
     }
   }
 `
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS)
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState('')
+
+  const [setBornYear] = useMutation(EDIT_AUTHOR)
+
+  const submit = (e) => {
+    console.log(setBornYear)
+    e.preventDefault()
+    setBornYear({ variables: { name, setBornTo: Number(born) } })
+    setName('')
+    setBorn('')
+  }
   if (!props.show) {
     return null
   }
@@ -38,6 +62,16 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <h2>Set birthyear</h2>
+      <form onSubmit={submit}>
+        <div>
+          name <input value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
+        <div>
+          born <input value={born} onChange={(e) => setBorn(e.target.value)} />
+        </div>
+        <button type="submit">update author</button>
+      </form>
     </div>
   )
 }

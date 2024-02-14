@@ -105,6 +105,7 @@ const typeDefs = `
     name: String!
     bookCount: Int!
     born: Int
+    id: ID!
   }
 
   type Mutation {
@@ -116,7 +117,7 @@ const typeDefs = `
     ): Book
     editAuthor(
       name: String!
-      setBornTo: Int!
+      setBornTo: Int
     ): Author
   }
 `
