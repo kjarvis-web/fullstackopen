@@ -20,6 +20,13 @@ const query = gql`
       bookCount
       born
     }
+    allBooks {
+      title
+      published
+      author
+      genres
+      id
+    }
   }
 `
 
