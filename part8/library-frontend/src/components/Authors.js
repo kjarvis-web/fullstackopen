@@ -24,7 +24,7 @@ const EDIT_AUTHOR = gql`
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS)
-  const [name, setName] = useState('')
+  const [name, setName] = useState(result.data.allAuthors[0].name)
   const [born, setBorn] = useState('')
 
   const [setBornYear] = useMutation(EDIT_AUTHOR)
@@ -65,7 +65,13 @@ const Authors = (props) => {
       <h2>Set birthyear</h2>
       <form onSubmit={submit}>
         <div>
-          name <input value={name} onChange={(e) => setName(e.target.value)} />
+          <select onChange={(e) => setName(e.target.value)}>
+            {result.data.allAuthors.map((n) => (
+              <option key={n.name} value={n.name}>
+                {n.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           born <input value={born} onChange={(e) => setBorn(e.target.value)} />

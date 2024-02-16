@@ -90,7 +90,7 @@ const typeDefs = `
     authorCount: Int!
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]
-    allAuthors: [Author!]!
+    allAuthors: [Author!]
   }
 
   type Book {
@@ -166,9 +166,9 @@ const resolvers = {
       if (!args.name) return null
       if (!name) return null
       const updatedAuthor = { ...name, born: args.setBornTo }
-      authors = authors.map((author) => {
+      authors = authors.map((author) =>
         author.name === args.name ? updatedAuthor : author
-      })
+      )
       return updatedAuthor
     },
   },
