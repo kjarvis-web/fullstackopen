@@ -21,9 +21,6 @@ mongoose
   })
   .catch((error) => console.log('error connection to MongoDB:', error.message))
 
-let authors = []
-const books = []
-
 const typeDefs = `
   type Query {
     authorCount: Int!
@@ -63,9 +60,16 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    authorCount: () => authors.length,
-    bookCount: () => books.length,
-    allBooks: async (root, args) => Book.find({}),
+    authorCount: async () => Author.collection.countDocuments(),
+    bookCount: async () => Book.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      try {
+        const books = await Book.find({}).populate('author')
+        return books
+      } catch (error) {
+        console.error('allBooks error:', error)
+      }
+    },
     // if (!args.author && !args.genre) {
     //   return books
     // }
@@ -82,18 +86,24 @@ const resolvers = {
     //   return both
     // }
 
-    allAuthors: () => authors,
+    allAuthors: async () => Author.find({}),
   },
   Author: {
     name: (root) => root.name,
-    bookCount: (root) => Book.findOne({ author: root.name }).length,
+    bookCount: async (root) => {
+      const bookCount = await Book.find({
+        author: root.name,
+      }).countDocuments()
+      return bookCount
+    },
     born: (root) => root.born,
   },
   Mutation: {
     addBook: async (root, args) => {
       const book = new Book({ ...args })
-      if (!Author.findOne({ name: args.author })) {
-        const author = new Author({ name: args.author })
+      let author = await Author.findOne({ name: args.author })
+      if (!author) {
+        author = new Author({ name: args.author })
         await author.save()
       }
       try {
