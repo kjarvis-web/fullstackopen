@@ -32,7 +32,7 @@ const typeDefs = `
   type Book {
     title: String!
     published: Int!
-    author: Author!
+    author: Author
     genres: [String!]
     id: ID!
   }
@@ -65,6 +65,7 @@ const resolvers = {
     allBooks: async (root, args) => {
       try {
         const books = await Book.find({}).populate('author')
+        console.log('allBooks: ', books)
         return books
       } catch (error) {
         console.error('allBooks error:', error)
@@ -89,23 +90,25 @@ const resolvers = {
     allAuthors: async () => Author.find({}),
   },
   Author: {
-    name: (root) => root.name,
+    name: async (root) => root.name,
     bookCount: async (root) => {
       const bookCount = await Book.find({
-        author: root.name,
+        author: root._id,
       }).countDocuments()
       return bookCount
     },
-    born: (root) => root.born,
+    born: async (root) => root.born || null,
   },
   Mutation: {
     addBook: async (root, args) => {
-      const book = new Book({ ...args })
       let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({ name: args.author })
         await author.save()
       }
+
+      const book = new Book({ ...args, author })
+      console.log(book)
       try {
         await book.save()
       } catch (error) {
