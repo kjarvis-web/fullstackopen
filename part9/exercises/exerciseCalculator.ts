@@ -1,5 +1,28 @@
 type Rating = 'good' | 'ok' | 'bad';
 
+interface Values {
+  dailyHours: number[];
+  target: number;
+}
+
+const parseArguments = (args: string[]): Values => {
+  if (args.length < 7) throw new Error('Not enough arguments');
+
+  const target = Number(args[2]);
+  if (isNaN(target)) {
+    throw new Error('Target value is not a number');
+  }
+
+  const dailyHours = args.slice(3).map((arg) => {
+    const hours = Number(arg);
+    if (isNaN(hours)) {
+      throw new Error('Provided values were not numbers');
+    }
+    return hours;
+  });
+
+  return { target, dailyHours };
+};
 const calculateExercises = (dailyHours: number[], target: number) => {
   const average =
     dailyHours.reduce((acc, curr) => acc + curr, 0) / dailyHours.length;
@@ -40,4 +63,15 @@ const calculateExercises = (dailyHours: number[], target: number) => {
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { dailyHours, target } = parseArguments(process.argv);
+  console.log(calculateExercises(dailyHours, target));
+} catch (error: unknown) {
+  let errorMessage = 'Something went wrong.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}
+
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
