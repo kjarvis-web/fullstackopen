@@ -44,6 +44,14 @@ app.post('/exercises', (req, res) => {
   console.log(dailyHours);
   console.log(target);
 
+  if (!dailyHours || !target) {
+    return res.status(400).send({ error: 'parameters missing' });
+  }
+
+  if (isNaN(dailyHours) || isNaN(target)) {
+    return res.status(400).send({ error: 'malformatted parameters' });
+  }
+
   const result = calculateExercises(dailyHours, Number(target));
 
   return res.send({ result });
