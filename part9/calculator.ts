@@ -1,7 +1,7 @@
-type Operation = 'multiply' | 'add' | 'divide';
-type Result = string | number;
+export type Operation = 'multiply' | 'add' | 'divide';
+// type Result = string | number;
 
-const calculator = (a: number, b: number, op: Operation): number => {
+export const calculator = (a: number, b: number, op: Operation): number => {
   switch (op) {
     case 'multiply':
       return a * b;

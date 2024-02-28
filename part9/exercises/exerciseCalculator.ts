@@ -1,6 +1,6 @@
-type Rating = 'good' | 'ok' | 'bad';
+// type Rating = 'good' | 'ok' | 'bad';
 
-interface Values {
+export interface Values {
   dailyHours: number[];
   target: number;
 }
@@ -9,13 +9,13 @@ const parseArguments = (args: string[]): Values => {
   if (args.length < 7) throw new Error('Not enough arguments');
 
   const target = Number(args[2]);
-  if (isNaN(target)) {
+  if (Number.isNaN(target)) {
     throw new Error('Target value is not a number');
   }
 
   const dailyHours = args.slice(3).map((arg) => {
     const hours = Number(arg);
-    if (isNaN(hours)) {
+    if (Number.isNaN(hours)) {
       throw new Error('Provided values were not numbers');
     }
     return hours;
@@ -23,9 +23,8 @@ const parseArguments = (args: string[]): Values => {
 
   return { target, dailyHours };
 };
-const calculateExercises = (dailyHours: number[], target: number) => {
-  const average =
-    dailyHours.reduce((acc, curr) => acc + curr, 0) / dailyHours.length;
+export const calculateExercises = (dailyHours: number[], target: number) => {
+  const average = dailyHours.reduce((acc, curr) => acc + curr, 0) / dailyHours.length;
 
   const trainingDays = dailyHours.filter((n) => n > 0).length;
 
@@ -50,6 +49,8 @@ const calculateExercises = (dailyHours: number[], target: number) => {
     case 3:
       ratingDescription = 'good';
       break;
+    default:
+      ratingDescription = 'Error';
   }
 
   return {
@@ -69,7 +70,7 @@ try {
 } catch (error: unknown) {
   let errorMessage = 'Something went wrong.';
   if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+    errorMessage += ` Error: ${error.message}`;
   }
   console.log(errorMessage);
 }
