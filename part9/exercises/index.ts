@@ -3,6 +3,8 @@ import { calculateExercises } from './exerciseCalculator';
 
 const app = express();
 
+app.use(express.json());
+
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack');
 });
@@ -37,11 +39,14 @@ app.get('/bmi', (req, res) => {
 });
 
 app.post('/exercises', (req, res) => {
+  console.log('request', req.body);
   const { dailyHours, target } = req.body;
+  console.log(dailyHours);
+  console.log(target);
 
   const result = calculateExercises(dailyHours, Number(target));
 
-  return res.json({ result });
+  return res.send({ result });
 });
 
 app.listen(PORT, () => {
