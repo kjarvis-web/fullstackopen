@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DiaryEntry } from '../types';
+import { DiaryEntry, DiaryFormValues } from '../types';
 
 const getAll = async () => {
   const { data } = await axios.get<DiaryEntry[]>(
@@ -9,4 +9,13 @@ const getAll = async () => {
   return data;
 };
 
-export default { getAll };
+const create = async (object: DiaryFormValues) => {
+  const { data } = await axios.post<DiaryEntry>(
+    'http://localhost:3000/api/diaries',
+    object
+  );
+
+  return data;
+};
+
+export default { getAll, create };
