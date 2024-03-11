@@ -31,6 +31,19 @@ const Add = ({ onCancel, onSubmit }: Props) => {
     }
   };
 
+  const handleWeather = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    if (typeof e.target.value === 'string') {
+      const value = e.target.value;
+      const weather = Object.values(Weather).find(
+        (w) => w.toString() === value
+      );
+      if (weather) {
+        setWeather(weather);
+      }
+    }
+  };
+
   return (
     <div>
       <h1>Add New Entry</h1>
@@ -49,7 +62,11 @@ const Add = ({ onCancel, onSubmit }: Props) => {
         </div>
         <div>
           weather
-          <input value={weather} onChange={(e) => setWeather(e.target.value)} />
+          <select value={weather} onChange={handleWeather}>
+            {Object.values(Weather).map((value) => (
+              <option value={value}>{value}</option>
+            ))}
+          </select>
         </div>
         <div>
           comment
