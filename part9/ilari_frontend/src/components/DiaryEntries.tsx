@@ -1,16 +1,14 @@
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 import diaryService from '../services/diaryEntries';
 import { DiaryEntry } from '../types';
 
-const DiaryEntries = () => {
-  const [entries, setEntries] = useState<DiaryEntry[]>([]);
+const DiaryEntries = ({entries, setEntries}) => {
+  
   useEffect(() => {
     const fetch = async () => {
       try {
         diaryService.getAll().then((data) => {
           setEntries(data);
-          console.log(entries);
         });
       } catch (error) {
         console.log(error);
@@ -18,6 +16,7 @@ const DiaryEntries = () => {
     };
     fetch();
   }, []);
+
   return (
     <div>
       <h1>Diary Entries</h1>

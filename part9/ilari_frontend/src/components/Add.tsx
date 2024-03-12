@@ -1,30 +1,34 @@
 import * as React from 'react';
 import { SyntheticEvent, useState } from 'react';
 import { DiaryFormValues, Visibility, Weather } from '../types';
+import diaryService from '../services/diaryEntries';
+// interface Props {
+//   onCancel: () => void;
+//   onSubmit: (values: DiaryFormValues) => void;
+// }
 
-interface Props {
-  onCancel: () => void;
-  onSubmit: (values: DiaryFormValues) => void;
-}
-
-const Add = ({ onCancel, onSubmit }: Props) => {
+const Add = ({entries, setEntries}) => {
   const [date, setDate] = useState('');
-  const [visibility, setVisibility] = useState('');
-  const [weather, setWeather] = useState(Weather.Cloudy);
+  const [visibility, setVisibility] = useState(Visibility.Great);
+  const [weather, setWeather] = useState(Weather.Sunny);
   const [comment, setComment] = useState('');
 
   const addDiary = (e: SyntheticEvent) => {
     e.preventDefault();
-    onSubmit({ date, visibility, weather, comment });
+    diaryService.create({ date, visibility, weather, comment }).then((data) => {
+      setEntries(entries.concat(data));
+    });
+    setDate('');
+    setVisibility(Visibility.Great);
+    setWeather(Weather.Sunny);
+    setComment('');
   };
 
   const handleVisibility = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     if (typeof e.target.value === 'string') {
       const value = e.target.value;
-      const visibility = Object.values(Visibility).find(
-        (v) => v.toString() === value
-      );
+      const visibility = Object.values(Visibility).find((v) => v.toString() === value);
       if (visibility) {
         setVisibility(visibility);
       }
@@ -35,9 +39,7 @@ const Add = ({ onCancel, onSubmit }: Props) => {
     e.preventDefault();
     if (typeof e.target.value === 'string') {
       const value = e.target.value;
-      const weather = Object.values(Weather).find(
-        (w) => w.toString() === value
-      );
+      const weather = Object.values(Weather).find((w) => w.toString() === value);
       if (weather) {
         setWeather(weather);
       }
@@ -47,7 +49,7 @@ const Add = ({ onCancel, onSubmit }: Props) => {
   return (
     <div>
       <h1>Add New Entry</h1>
-      <form>
+      <form onSubmit={addDiary}>
         <div>
           date
           <input value={date} onChange={(e) => setDate(e.target.value)} />
@@ -56,7 +58,9 @@ const Add = ({ onCancel, onSubmit }: Props) => {
           visibility
           <select value={visibility} onChange={handleVisibility}>
             {Object.values(Visibility).map((value) => (
-              <option value={value}>{value}</option>
+              <option key={value} value={value}>
+                {value}
+              </option>
             ))}
           </select>
         </div>
@@ -64,7 +68,9 @@ const Add = ({ onCancel, onSubmit }: Props) => {
           weather
           <select value={weather} onChange={handleWeather}>
             {Object.values(Weather).map((value) => (
-              <option value={value}>{value}</option>
+              <option key={value} value={value}>
+                {value}
+              </option>
             ))}
           </select>
         </div>
